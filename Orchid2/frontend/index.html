@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html ng-app="orchidApp">
+<head>
+    <link rel="stylesheet" href="styles/styles.css">
+    <meta charset="UTF-8" />
+    <title>Orchid Ecommerce</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="app/app.js"></script>
+    <script src="app/controllers/homeController.js"></script>
+    <script src="app/controllers/loginController.js"></script>
+    <script src="app/controllers/registerController.js"></script>
+    <script src="app/controllers/checkoutController.js"></script>
+    <script src="app/controllers/orderController.js"></script>
+    <script src="app/services/userService.js"></script>
+    <script src="app/services/productService.js"></script>
+    <script src="app/services/orderService.js"></script>
+    <script src="app/services/cartService.js"></script>
+    <style>
+        /* Basic styling for layout */
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 1200px; margin: auto; }
+        .grid { display: flex; flex-wrap: wrap; gap: 15px; }
+        .product-card { border: 1px solid #ddd; padding: 10px; width: 200px; }
+        .filter-pane { width: 200px; float: left; }
+        .content-pane { margin-left: 220px; }
+        input, button { padding: 5px; margin: 5px 0; width: 100%; }
+        nav a { margin-right: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="container" ng-controller="mainController">
+        <nav>
+            <a href="#!/">Home</a>
+            <a href="#!/orders">Order History</a>
+            <a href="#!/login" ng-if="!isLoggedIn()">Login</a>
+            <a href="#!/register" ng-if="!isLoggedIn()">Register</a>
+            <a href="" ng-click="logout()" ng-if="isLoggedIn()">Logout</a>
+            <span ng-if="isLoggedIn()"> | Welcome, {{currentUser.username}}</span>
+        </nav>
+        <div ng-view></div>
+    </div>
+
+</body>
+</html>

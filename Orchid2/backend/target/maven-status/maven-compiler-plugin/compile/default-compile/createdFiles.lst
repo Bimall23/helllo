@@ -1,0 +1,13 @@
+com\orchid\model\Order.class
+com\orchid\controller\OrderController$OrderRequest.class
+com\orchid\controller\OrderController.class
+com\orchid\model\Product.class
+com\orchid\controller\UserController.class
+com\orchid\model\User.class
+com\orchid\OrchidEcommerceApplication.class
+com\orchid\model\OrderItem.class
+com\orchid\controller\OrderController$OrderRequest$OrderItemDTO.class
+com\orchid\repository\OrderRepository.class
+com\orchid\repository\ProductRepository.class
+com\orchid\repository\UserRepository.class
+com\orchid\controller\ProductController.class

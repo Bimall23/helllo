@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="orchidApp" ng-controller="confirmationController">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orchid Shop - Order Confirmation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 50%, #a5d6a7 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .confirmation-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(76, 175, 80, 0.15);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            animation: celebrateIn 0.8s ease-out;
+            margin: 2rem auto;
+            padding: 3rem;
+            max-width: 800px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes celebrateIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(50px);
+            }
+            50% {
+                transform: scale(1.05) translateY(-10px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .confirmation-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            color: #4caf50;
+            margin-bottom: 1.5rem;
+            animation: bounce 2s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .confirmation-header {
+            position: relative;
+            z-index: 1;
+        }
+
+        .confirmation-header h2 {
+            color: #2e7d32;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #4caf50, #66bb6a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .confirmation-message {
+            font-size: 1.3rem;
+            color: #4a5568;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .order-details {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.08);
+            border: 1px solid rgba(76, 175, 80, 0.1);
+            text-align: left;
+            position: relative;
+            z-index: 1;
+        }
+
+        .order-details h4 {
+            color: #2e7d32;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(76, 175, 80, 0.1);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            color: #2e7d32;
+            font-size: 1.2rem;
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .item-image {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #e8f5e8;
+        }
+
+        .item-details h6 {
+            color: #2e7d32;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .item-details small {
+            color: #666;
+        }
+
+        .tracking-info {
+            background: linear-gradient(135deg, #f1f8e9, #e8f5e8);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 2px solid #c8e6c9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tracking-info h5 {
+            color: #2e7d32;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .tracking-number {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #4caf50;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 0.5rem 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-home {
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-home:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(76, 175, 80, 0.4);
+            background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-track {
+            background: linear-gradient(135deg, #81c784, #a5d6a7);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(129, 199, 132, 0.3);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-track:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(129, 199, 132, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        .celebration-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .confetti {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: confettiFall 3s ease-in-out infinite;
+        }
+
+        .confetti:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .confetti:nth-child(2) { left: 20%; animation-delay: 0.5s; }
+        .confetti:nth-child(3) { left: 30%; animation-delay: 1s; }
+        .confetti:nth-child(4) { left: 70%; animation-delay: 0.3s; }
+        .confetti:nth-child(5) { left: 80%; animation-delay: 0.8s; }
+        .confetti:nth-child(6) { left: 90%; animation-delay: 1.2s; }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(400px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .confirmation-container {
+                margin: 1rem;
+                padding: 2rem;
+            }
+            
+            .confirmation-header h2 {
+                font-size: 2rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-home, .btn-track {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar (matching your home page) -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">🌺 Orchid Shop</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="checkout.html">Checkout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="confirmation-container">
+            <!-- Celebration Elements -->
+            <div class="celebration-elements">
+                <div class="confetti">🌸</div>
+                <div class="confetti">🌺</div>
+                <div class="confetti">🌼</div>
+                <div class="confetti">🌻</div>
+                <div class="confetti">🌷</div>
+                <div class="confetti">🌹</div>
+            </div>
+
+            <div class="success-icon">✅</div>
+            
+            <div class="confirmation-header">
+                <h2>Order Confirmation</h2>
+                <p class="confirmation-message">
+                    🎉 Your orchid order has been successfully placed!<br>
+                    Thank you for choosing our beautiful flowers! 🌺
+                </p>
+            </div>
+
+            <!-- Order Details -->
+            <div class="order-details">
+                <h4>📋 Order Summary</h4>
+                <div class="order-item" ng-repeat="item in orderItems">
+                    <div class="item-info">
+                        <img ng-src="{{item.imageUrl}}" alt="{{item.name}}" class="item-image">
+                        <div class="item-details">
+                            <h6>{{item.name}}</h6>
+                            <small>Quantity: {{item.quantity}}</small>
+                        </div>
+                    </div>
+                    <span>${{item.price * item.quantity | number:2}}</span>
+                </div>
+                <div class="order-item">
+                    <strong>Total Amount:</strong>
+                    <strong>${{orderTotal | number:2}}</strong>
+                </div>
+            </div>
+
+            <!-- Tracking Information -->
+            <div class="tracking-info">
+                <h5>📦 Shipping Information</h5>
+                <p>Your order is being prepared for shipment. You'll receive an email with tracking details shortly.</p>
+                <div>
+                    <strong>Order Number:</strong>
+                    <div class="tracking-number">ORD-{{orderNumber}}</div>
+                </div>
+                <p class="mb-0"><strong>Estimated Delivery:</strong> 3-5 business days</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="index.html" class="btn-home">
+                    🏠 Back to Home
+                </a>
+                <a href="#" class="btn-track" ng-click="trackOrder()">
+                    📍 Track Order
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer (matching your home page) -->
+    <footer class="bg-light text-center text-muted py-3 mt-5">
+        &copy; 2025 Orchid Shop. All rights reserved.
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        angular.module('orchidApp', [])
+        .controller('confirmationController', ['$scope', function ($scope) {
+            
+            // Sample order data (in real app, this would come from the previous checkout)
+            $scope.orderItems = [
+               
+                  {
+                      
+                            name: 'Notebooks',
+                            price: 15.00,
+                            quantity: 2,
+                            imageUrl: 'https://d1nhio0ox7pgb.cloudfront.net/_img/v_collection_png/512x512/shadow/notebook2.png'
+                        },
+                    {
+                        
+                            name: 'Pencils',
+                            price: 18.00,
+                            quantity: 1,
+                            imageUrl: 'https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/512x512/pencil.png'
+                        },
+                    {
+                       
+                            name: 'Toothpaste',
+                            price: 20.00,
+                            quantity: 3,
+                            imageUrl: 'https://www.iconexperience.com/_img/v_collection_png/256x256/shadow/paint_tube.png'
+                        }
+            ];
+            
+            // Calculate total
+            $scope.orderTotal = $scope.orderItems.reduce(function(total, item) {
+                return total + (item.price * item.quantity);
+            }, 0);
+            
+            // Generate random order number
+            $scope.orderNumber = Math.floor(Math.random() * 900000) + 100000;
+            
+            $scope.trackOrder = function() {
+                alert('🌺 Order Tracking\n\nOrder #ORD-' + $scope.orderNumber + '\n\nStatus: Processing\nEstimated Delivery: 3-5 business days\n\nYour beautiful orchids are being carefully prepared for shipment!');
+            };
+        }]);
+    </script>
+</body>
+</html>
